@@ -1,0 +1,29 @@
+package {{.ModelName}}
+
+{{ if .importList}}
+import ({{ range $index,$value := .importList}}
+    {{$value}}{{end }}
+)
+{{ end}}
+
+const tableName = "{{.TableName}}"{{range $index,$value := .fieldList}}
+const {{$value.FieldName}} = "{{$value.Field}}"{{end}}
+
+type {{.ModelName}} struct {
+{{range $index,$value := .fieldList}}
+    {{$value.StructFieldName}} {{$value.Type}} `gorm:"{{if $value.Pid}}primaryKey;{{end}}column:{{$value.DBFieldName}};{{$value.TypeTag}}{{$value.NullTag}}{{$value.DefaultTag}}" json:"{{$value.JsonName}}"`// {{$value.Comment}}  {{end}}
+}
+
+// func (itself *{{.ModelName}}) BeforeSave(tx *gorm.DB) (err error) {}
+// func (itself *{{.ModelName}}) BeforeCreate(tx *gorm.DB) (err error) {}
+// func (itself *{{.ModelName}}) AfterCreate(tx *gorm.DB) (err error) {}
+// func (itself *{{.ModelName}}) BeforeUpdate(tx *gorm.DB) (err error) {}
+// func (itself *{{.ModelName}}) AfterUpdate(tx *gorm.DB) (err error) {}
+// func (itself *{{.ModelName}}) AfterSave(tx *gorm.DB) (err error) {}
+// func (itself *{{.ModelName}}) BeforeDelete(tx *gorm.DB) (err error) {}
+// func (itself *{{.ModelName}}) AfterDelete(tx *gorm.DB) (err error) {}
+// func (itself *{{.ModelName}}) AfterFind(tx *gorm.DB) (err error) {}
+
+func ({{.ModelName}}) TableName() string {
+	return tableName
+}

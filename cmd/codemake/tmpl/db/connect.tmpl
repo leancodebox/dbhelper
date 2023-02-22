@@ -1,0 +1,24 @@
+package {{.ModelName}}
+
+import (
+	"gorm.io/gorm"
+
+	db {{.DBPkg}}
+)
+
+// Prohibit manual changes
+// 禁止手动更改本文件
+
+func builder() *gorm.DB {
+	return db.Std().Table(tableName)
+}
+
+func First(db *gorm.DB) (el {{.ModelName}}) {
+	db.First(&el)
+	return
+}
+
+func List(db *gorm.DB) (el []{{.ModelName}}) {
+	db.Find(&el)
+	return
+}
