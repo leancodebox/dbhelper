@@ -17,7 +17,7 @@ func init() {
 	appendCommand(&cobra.Command{
 		Use:   "migrate:table",
 		Short: "导表助手",
-		Long:  ".env 文件中 LOCAL_DATABASE_URL(local) 为导入db地址， TMP_DATABASE_URL(tmp) 为被导入db地址。会获取tmp中的表信息导入至local中",
+		Long:  ".env 文件中 TARGET_DATABASE_URL(local) 为导入db地址， ORIGIN_DATABASE_URL(tmp) 为被导入db地址。会获取tmp中的表信息导入至local中",
 		Run:   runMTableFromDb,
 		//Args:  cobra.ExactArgs(1), // 只允许且必须传 1 个参数
 	})
@@ -25,8 +25,8 @@ func init() {
 
 func runMTableFromDb(_ *cobra.Command, _ []string) {
 	// init
-	dataSourceName := config.GetString("TMP_DATABASE_URL")
-	localSourceName := config.GetString("LOCAL_DATABASE_URL")
+	dataSourceName := config.GetString("ORIGIN_DATABASE_URL")
+	localSourceName := config.GetString("TARGET_DATABASE_URL")
 	localDb, err := gorm.Open(mysql.Open(localSourceName), &gorm.Config{PrepareStmt: false,
 		NamingStrategy: schema.NamingStrategy{SingularTable: true}, // 全局禁用表名复数
 		Logger:         logger.Default})

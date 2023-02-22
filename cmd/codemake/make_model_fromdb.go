@@ -49,7 +49,7 @@ type genColumns struct {
 func runGModel(_ *cobra.Command, _ []string) {
 
 	// init
-	dataSourceName := config.GetString("TMP_DATABASE_URL")
+	dataSourceName := config.GetString("ORIGIN_DATABASE_URL")
 	outputRoot := config.GetString("MODEL_OUTPUT_DIR", "./storage/tmp/model/")
 
 	db, err := gorm.Open(mysql.Open(dataSourceName), &gorm.Config{PrepareStmt: false,
