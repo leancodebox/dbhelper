@@ -4,6 +4,7 @@ import (
 	"github.com/purerun/dbhelper/cmd/codemake"
 	"github.com/purerun/dbhelper/util"
 	"github.com/purerun/dbhelper/util/app"
+	"github.com/purerun/dbhelper/util/config"
 	"github.com/spf13/cobra"
 )
 
@@ -19,6 +20,7 @@ var rootCmd = &cobra.Command{
 				panic(err)
 			}
 		}
+		config.InitConfig("")
 	},
 }
 
