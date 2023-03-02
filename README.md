@@ -67,3 +67,39 @@ root:password@tcp(127.0.0.1:3306)/thh_database?charset=utf8mb4&parseTime=True&lo
 # 使用 dbhelper 生成 gorm
 
 [使用 dbhelper 生成 gorm](./examples/make_model.md)
+
+# 编译相关 / about build
+
+
+windows
+```
+SET CGO_ENABLED=0
+SET GOOS=darwin
+SET GOARCH=amd64
+go build
+
+SET CGO_ENABLED=0
+SET GOOS=darwin
+SET GOARCH=arm64
+go build
+
+SET CGO_ENABLED=0
+SET GOOS=linux
+SET GOARCH=amd64
+go build
+```
+
+mac
+```
+go build
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build
+```
+
+linux
+```
+go build
+CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build
+CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build
+CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build
+```
