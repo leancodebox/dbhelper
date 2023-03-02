@@ -16,7 +16,7 @@ import (
 func init() {
 	appendCommand(&cobra.Command{
 		Use:   "migrate:table",
-		Short: "导表助手",
+		Short: "导表助手（表结构）",
 		Long:  ".env 文件中 TARGET_DATABASE_URL(local) 为导入db地址， ORIGIN_DATABASE_URL(tmp) 为被导入db地址。会获取tmp中的表信息导入至local中",
 		Run:   runMTableFromDb,
 		//Args:  cobra.ExactArgs(1), // 只允许且必须传 1 个参数
@@ -53,6 +53,7 @@ func runMTableFromDb(_ *cobra.Command, _ []string) {
 	eh.PrIF(rows.Close())
 
 	reg, _ := regexp.Compile("AUTO_INCREMENT=[0-9]+")
+	// (datetime[A-Za-z0-1\s]+')(0000-00-00 00:00:00)'
 	//根据规则提取关键信息
 	for tmpTableName, _ := range tbDesc {
 		var list []ShowTable

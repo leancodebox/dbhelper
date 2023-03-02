@@ -17,7 +17,7 @@ import (
 func init() {
 	appendCommand(&cobra.Command{
 		Use:   "migrate:tabledata",
-		Short: "导表助手2",
+		Short: "导表助手（表数据）",
 		Long:  ".env 文件中 TARGET_DATABASE_URL(local) 为导入db地址， ORIGIN_DATABASE_URL(tmp) 为被导入db地址。会获取tmp中的表信息导入至local中",
 		Run:   runMTableDataFromDb,
 		//Args:  cobra.ExactArgs(1), // 只允许且必须传 1 个参数
@@ -78,7 +78,7 @@ func runMTableDataFromDb(_ *cobra.Command, _ []string) {
 				itemData := dataList[len(dataList)-1]
 				lastId = cast.ToInt(itemData[primaryKey])
 				cErr := localDb.Table(tmpTableName).Clauses(clause.Insert{Modifier: "IGNORE"}).Create(dataList).Error
-				if cErr!=nil{
+				if cErr != nil {
 					fmt.Println(cErr)
 				}
 			}
