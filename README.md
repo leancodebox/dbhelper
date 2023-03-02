@@ -63,3 +63,7 @@ root:password@tcp(127.0.0.1:3306)/thh_database?charset=utf8mb4&parseTime=True&lo
 配置与表结构迁移相同，需注意保持两个数据库的表相同，如果出现表结构不同，或 mysql 版本不同都可能出现一些不符合预期的结果。
 
 配置好后即可执行迁移指令 `dbhelper migrate:tabledata`
+
+# 使用 dbhelper 生成 gorm
+
+[使用 dbhelper 生成 gorm](./examples/make_model.md)

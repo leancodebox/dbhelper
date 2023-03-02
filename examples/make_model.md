@@ -1,5 +1,84 @@
 ## 自动生成 gorm 文件
 
+### 在生成 model 文件之前
+
+在生成 model 文件之前，你需要先实现一个可以获取 gorm 连接的实例包。
+这里以新项目为例子
+```shell
+mkdir go-project # 创建目录
+cd go-project # 进入目录
+go mod init go-sample # go mod 初始化命令
+go get -u gorm.io/gorm  # 引入 gorm 包
+go get -u gorm.io/driver/mysql # 引入 mysql 驱动
+touch main.go # 创建入口文件
+mkdir dbconnect # 因为go不允许循环依赖，所以我们这里创建一个文件夹用来写处理连接包
+cd dbconnect # 进入文件夹
+touch dbconnect.go # 创建文件 
+cd .. # 回到项目根目录
+```
+
+此时我们的目录结构如下
+```
+|____dbconnect.go
+|____dbconnect
+| |____dbconnect.go
+|____main.go
+```
+
+我们依次编辑 `main.go` 和 `dbconnect.go`
+
+`dbconnect.go`
+```go
+package dbconnect
+
+import (
+	"fmt"
+
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+)
+
+var stdDB *gorm.DB
+
+func init() {
+	dbUrl := `root:123456@tcp(:3306)/test?charset=utf8mb4&parseTime=True&loc=Local`
+	config := mysql.New(mysql.Config{
+		DSN: dbUrl,
+	})
+	db, err := gorm.Open(config, &gorm.Config{})
+	if err != nil {
+		fmt.Println(err)
+		panic("数据库连接失败")
+	}
+	stdDB = db
+}
+
+func Std() *gorm.DB {
+	return stdDB
+}
+
+
+```
+`main.go`
+
+```go
+package main
+
+import (
+	"fmt"
+	"go-sample/dbconnect"
+)
+
+func main() {
+	fmt.Println(dbconnect.Std())
+}
+```
+
+此时我们已经做好了前置工作。其中 `dbconnect.Std()` 这个函数非常重要，我们生成的`model`,将通过这个函数与数据库进行交互。
+正如你所见，我们这个项目的 `dbconnect` 包的引入路径为 `go-sample/dbconnect`  
+
+
+
 ### 创建如下数据表
 
 例如在 `test` 数据库中创建:
@@ -37,7 +116,8 @@ $ vim .env
 
 # 你的数据库配置
 ORIGIN_DATABASE_URL=root:123456@tcp(:3306)/test?charset=utf8mb4&parseTime=True&loc=Local
-# 生成代码目录
+DB_CONNECT=go-sample/dbconnect
+# 生成代码目录（按需改成你需要的目录，或者把这个目录写到你项目需要生成的目录也可以）
 MODEL_OUTPUT_DIR=./model/
 ```
 
@@ -117,7 +197,7 @@ package Users
 import (
 	"gorm.io/gorm"
 
-	db "thh/conf/dbconnect"
+	db "go-sample/dbconnect"
 )
 
 // Prohibit manual changes
@@ -184,3 +264,41 @@ func IsExist(field, value string) bool {
 	return count > 0
 }
 ```
+
+## 成功标志
+
+此时我们的目录结构应为
+
+```
+|____go.mod
+|____go.sum
+|____.env
+|____dbconnect
+| |____dbconnect.go
+|____model
+| |____Users
+| | |____Users.go
+| | |____Users_rep.go
+| | |____Users_connect.go
+|____main.go
+```
+
+我们可以更改 `main.go` 文件进行测试（如果此时数据库已有数据）
+
+```go
+package main
+
+import (
+	"fmt"
+	"go-sample/dbconnect"
+	"go-sample/model/Users"
+)
+
+func main() {
+	fmt.Println(dbconnect.Std())
+	fmt.Println(Users.All())
+}
+
+```
+
+在项目根目录执行 `go run .` 如果可以正常运行，说明迁移顺利。如果出现异常请在 issue 中留言。
