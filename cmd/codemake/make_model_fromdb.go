@@ -3,11 +3,13 @@ package codemake
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/purerun/dbhelper/util"
 	"github.com/purerun/dbhelper/util/config"
@@ -52,9 +54,19 @@ func runGModel(_ *cobra.Command, _ []string) {
 	dataSourceName := config.GetString("ORIGIN_DATABASE_URL")
 	outputRoot := config.GetString("MODEL_OUTPUT_DIR", "./storage/tmp/model/")
 
+	newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer（日志输出的目标，前缀和日志包含的内容——译者注）
+		logger.Config{
+			SlowThreshold:             time.Second,  // 慢 SQL 阈值
+			LogLevel:                  logger.Error, // 日志级别
+			IgnoreRecordNotFoundError: true,         // 忽略ErrRecordNotFound（记录未找到）错误
+			Colorful:                  false,        // 禁用彩色打印
+		},
+	)
+
 	db, err := gorm.Open(mysql.Open(dataSourceName), &gorm.Config{PrepareStmt: false,
 		NamingStrategy: schema.NamingStrategy{SingularTable: true}, // 全局禁用表名复数
-		Logger:         logger.Default})
+		Logger:         newLogger})
 	if eh.PrIF(err) {
 		return
 	}
