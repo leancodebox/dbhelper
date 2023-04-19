@@ -1,41 +1,41 @@
 package {{.ModelName}}
 
-func Create(entity *{{.ModelName}}) int64 {
+func create(entity *{{.ModelName}}) int64 {
 	result := builder().Create(entity)
 	return result.RowsAffected
 }
 
-func Save(entity *{{.ModelName}}) int64 {
+func save(entity *{{.ModelName}}) int64 {
 	result := builder().Save(entity)
 	return result.RowsAffected
 }
 
-func SaveAll(entities *[]{{.ModelName}}) int64 {
+func saveAll(entities []*{{.ModelName}}) int64 {
 	result := builder().Save(entities)
 	return result.RowsAffected
 }
 
-func Delete(entity *{{.ModelName}}) int64 {
+func deleteEntity(entity *{{.ModelName}}) int64 {
 	result := builder().Delete(entity)
 	return result.RowsAffected
 }
 
-func Get(id any) (entity *{{.ModelName}}) {
+func get(id any) (entity *{{.ModelName}}) {
 	builder().Where(pid, id).First(entity)
 	return
 }
 
-func GetBy(field, value string) (entity {{.ModelName}}) {
+func getBy(field, value string) (entity *{{.ModelName}}) {
 	builder().Where(field + " = ?", value).First(&entity)
 	return
 }
 
-func All() (entities []{{.ModelName}}) {
+func all() (entities []*{{.ModelName}}) {
 	builder().Find(&entities)
 	return
 }
 
-func IsExist(field, value string) bool {
+func isExist(field, value string) bool {
 	var count int64
 	builder().Where(field + " = ?", value).Count(&count)
 	return count > 0
