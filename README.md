@@ -7,7 +7,7 @@
 如果你的本地有`go 1.18`以上的环境。你可以使用以下命令直接安装。
 
 ```
-go install github.com/purerun/dbhelper@latest
+go install github.com/leancodebox/dbhelper@latest
 ```
 
 执行后你可以运行`dbhelper`查看是否安装成功
