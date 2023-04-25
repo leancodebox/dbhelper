@@ -9,8 +9,8 @@ import (
 	"path/filepath"
 	"text/template"
 
-	"github.com/purerun/dbhelper/util"
-	"github.com/purerun/dbhelper/util/str"
+	"github.com/leancodebox/dbhelper/util"
+	"github.com/leancodebox/dbhelper/util/str"
 
 	"github.com/iancoleman/strcase"
 )

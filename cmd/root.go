@@ -2,10 +2,10 @@ package console
 
 import (
 	"fmt"
-	"github.com/purerun/dbhelper/cmd/codemake"
-	"github.com/purerun/dbhelper/util"
-	"github.com/purerun/dbhelper/util/app"
-	"github.com/purerun/dbhelper/util/config"
+	"github.com/leancodebox/dbhelper/cmd/codemake"
+	"github.com/leancodebox/dbhelper/util"
+	"github.com/leancodebox/dbhelper/util/app"
+	"github.com/leancodebox/dbhelper/util/config"
 	"github.com/spf13/cobra"
 )
 
@@ -29,7 +29,9 @@ func init() {
 	rootCmd.AddCommand(&cobra.Command{
 		Use:   "init",
 		Short: "初始化配置文件",
-		Run:   func(_ *cobra.Command, _ []string) { fmt.Println("配置文件初始化完成，你可以查看当前目录下 .env 文件") },
+		Run: func(_ *cobra.Command, _ []string) {
+			fmt.Println("配置文件初始化完成，你可以查看当前目录下 .env 文件")
+		},
 	})
 	rootCmd.AddCommand(codemake.GetCommands()...)
 }

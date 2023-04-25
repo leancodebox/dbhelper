@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/purerun/dbhelper/util/eh"
+	"github.com/leancodebox/dbhelper/util/eh"
 
 	"github.com/spf13/cast"
 )

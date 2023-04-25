@@ -11,10 +11,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/purerun/dbhelper/util"
-	"github.com/purerun/dbhelper/util/config"
-	"github.com/purerun/dbhelper/util/eh"
-	"github.com/purerun/dbhelper/util/str"
+	"github.com/leancodebox/dbhelper/util"
+	"github.com/leancodebox/dbhelper/util/config"
+	"github.com/leancodebox/dbhelper/util/eh"
+	"github.com/leancodebox/dbhelper/util/str"
 
 	"github.com/spf13/cobra"
 	"gorm.io/driver/mysql"

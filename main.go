@@ -3,8 +3,8 @@ package main
 import (
 	_ "embed"
 
-	console "github.com/purerun/dbhelper/cmd"
-	"github.com/purerun/dbhelper/util/app"
+	console "github.com/leancodebox/dbhelper/cmd"
+	"github.com/leancodebox/dbhelper/util/app"
 )
 
 //go:embed .env.example

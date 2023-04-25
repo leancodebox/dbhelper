@@ -1,4 +1,4 @@
-module github.com/purerun/dbhelper
+module github.com/leancodebox/dbhelper
 
 go 1.18
 

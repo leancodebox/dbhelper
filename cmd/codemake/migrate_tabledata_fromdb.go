@@ -2,9 +2,9 @@ package codemake
 
 import (
 	"fmt"
-	"github.com/purerun/dbhelper/util/app"
-	"github.com/purerun/dbhelper/util/config"
-	"github.com/purerun/dbhelper/util/eh"
+	"github.com/leancodebox/dbhelper/util/app"
+	"github.com/leancodebox/dbhelper/util/config"
+	"github.com/leancodebox/dbhelper/util/eh"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"gorm.io/driver/mysql"
