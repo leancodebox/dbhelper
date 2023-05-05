@@ -182,7 +182,7 @@ func buildModelContent(tmpTableName string, list []genColumns) (string, string, 
 			NullTag:         nullTag,
 			DefaultTag:      defaultStr,
 			TypeTag:         typeString,
-			Comment:         value.Desc,
+			Comment:         strings.ReplaceAll(value.Desc, "\n", ""),
 		})
 
 	}
