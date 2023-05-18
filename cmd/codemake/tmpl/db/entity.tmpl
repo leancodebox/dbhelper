@@ -24,6 +24,6 @@ type {{.ModelName}} struct {
 // func (itself *{{.ModelName}}) AfterDelete(tx *gorm.DB) (err error) {}
 // func (itself *{{.ModelName}}) AfterFind(tx *gorm.DB) (err error) {}
 
-func ({{.ModelName}}) TableName() string {
+func (itself *{{.ModelName}}) TableName() string {
 	return tableName
 }
