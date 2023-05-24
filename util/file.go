@@ -31,8 +31,8 @@ func StoragePut(filename string, data any, append bool) error {
 }
 
 // Put 将数据存入文件
-func Put(data []byte, to string) (err error) {
-	err = os.WriteFile(to, data, 0644)
+func Put[dataType []byte | string](data dataType, to string) (err error) {
+	err = os.WriteFile(to, []byte(data), 0644)
 	return
 }
 

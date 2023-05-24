@@ -51,8 +51,8 @@ type genColumns struct {
 func runGModel(_ *cobra.Command, _ []string) {
 
 	// init
-	dataSourceName := config.GetString("ORIGIN_DATABASE_URL")
-	outputRoot := config.GetString("MODEL_OUTPUT_DIR", "./storage/tmp/model/")
+	dataSourceName := config.GetString("dbTool.originUrl")
+	outputRoot := config.GetString("dbTool.output", "./storage/tmp/model/")
 
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer（日志输出的目标，前缀和日志包含的内容——译者注）

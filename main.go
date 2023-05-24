@@ -7,12 +7,12 @@ import (
 	"github.com/leancodebox/dbhelper/util/app"
 )
 
-//go:embed .env.example
+//go:embed config.example.toml
 var envExample string
 
 func main() {
 	app.InitStart()
-	app.EnvExample(envExample)
+	app.DefaultConfig(envExample)
 
 	console.Execute()
 

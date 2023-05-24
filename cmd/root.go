@@ -5,7 +5,6 @@ import (
 	"github.com/leancodebox/dbhelper/cmd/codemake"
 	"github.com/leancodebox/dbhelper/util"
 	"github.com/leancodebox/dbhelper/util/app"
-	"github.com/leancodebox/dbhelper/util/config"
 	"github.com/spf13/cobra"
 )
 
@@ -15,13 +14,12 @@ var rootCmd = &cobra.Command{
 	Short: "数据库助手/database helper",
 	Long:  `数据库助手/database helper`,
 	PersistentPreRun: func(command *cobra.Command, args []string) {
-		if !util.IsExist("./.env") {
-			err := util.Put([]byte(app.GetEnvExample()), "./.env")
+		if !util.IsExist("./config.toml") {
+			err := util.Put(app.GetDefaultConfig(), "./config.toml")
 			if err != nil {
 				panic(err)
 			}
 		}
-		config.InitConfig("")
 	},
 }
 
@@ -30,7 +28,7 @@ func init() {
 		Use:   "init",
 		Short: "初始化配置文件",
 		Run: func(_ *cobra.Command, _ []string) {
-			fmt.Println("配置文件初始化完成，你可以查看当前目录下 .env 文件")
+			fmt.Println("配置文件初始化完成，你可以查看当前目录下 config.toml 文件")
 		},
 	})
 	rootCmd.AddCommand(codemake.GetCommands()...)

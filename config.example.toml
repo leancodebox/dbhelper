@@ -1,0 +1,8 @@
+[dbTool]
+# 目标数据库
+targetUrl = "root:root_password@tcp(127.0.0.1:3306)/thh_database?charset=utf8mb4&parseTime=True&loc=Local"
+# 源数据库
+originUrl = "root:root_password@tcp(127.0.0.1:3306)/thh_database?charset=utf8mb4&parseTime=True&loc=Local"
+# 源数据库
+dbConnect = "dt/config/dbconnect"
+output = "./storage/model/"

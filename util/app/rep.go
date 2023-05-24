@@ -1,11 +1,11 @@
 package app
 
-var envExample string
+var defaultConfig string
 
-func EnvExample(data string) {
-	envExample = data
+func DefaultConfig(data string) {
+	defaultConfig = data
 }
 
-func GetEnvExample() string {
-	return envExample
+func GetDefaultConfig() string {
+	return defaultConfig
 }

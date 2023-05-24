@@ -1,72 +1,27 @@
 package config
 
 import (
-	"os"
-
+	"flag"
+	"fmt"
 	"github.com/spf13/cast"
-	viperlib "github.com/spf13/viper" // 自定义包名，避免与内置 viper 实例冲突
+	"github.com/spf13/viper" // 自定义包名，避免与内置 viper 实例冲突
 )
 
-// viper 库实例
-var viper *viperlib.Viper
+var v *viper.Viper
 
-// Func 动态加载配置信息
-type Func func() map[string]any
-
-// FuncList 先加载到此数组，loadConfig 在动态生成配置信息
-var FuncList map[string]Func
-
+// 初始化配置信息，完成对环境变量以及 conf 信息的加载
 func init() {
-
-	// 1. 初始化 Viper 库
-	viper = viperlib.New()
-	// 2. 配置类型，支持 "json", "toml", "yaml", "yml", "properties",
-	//             "props", "prop", "env", "dotenv"
-	viper.SetConfigType("env")
-	// 3. 环境变量配置文件查找的路径，相对于 main.go
-	viper.AddConfigPath(".")
-	// 4. 设置环境变量前缀，用以区分 Go 的系统环境变量
-	//viper.SetEnvPrefix("appenv")
-	// 5. 读取环境变量（支持 flags）
-	//viper.AutomaticEnv()
-
-	FuncList = make(map[string]Func)
-}
-
-// InitConfig 初始化配置信息，完成对环境变量以及 conf 信息的加载
-func InitConfig(env string) {
-	// 1. 加载环境变量
-	loadEnv(env)
-	// 2. 注册配置信息
-	loadConfig()
-}
-
-func loadConfig() {
-	for name, fn := range FuncList {
-		viper.Set(name, fn())
+	// 使用独立的实例。防止外部直接调用 viper 标准实例
+	v = viper.New()
+	v.SetConfigType("toml") // "json", "toml", "yaml", "yml", "properties", "props", "prop", "env", "dotenv"
+	v.AddConfigPath(".")
+	configFlag := flag.String("config", "config.toml", "path to config file")
+	// 将命令行标志的值设置为 Viper 配置实例的属性
+	v.SetConfigFile(*configFlag)
+	if err := v.ReadInConfig(); err != nil {
+		fmt.Println("ReadInConfig err", err)
 	}
-}
-
-func loadEnv(envSuffix string) {
-
-	// 默认加载 .env 文件，如果有传参 --env=name 的话，加载 .env.name 文件
-	envPath := ".env"
-	if len(envSuffix) > 0 {
-		filepath := ".env." + envSuffix
-		if _, err := os.Stat(filepath); err == nil {
-			// 如 .env.testing 或 .env.stage
-			envPath = filepath
-		}
-	}
-
-	// 加载 env
-	viper.SetConfigName(envPath)
-	if err := viper.ReadInConfig(); err != nil {
-		panic(err)
-	}
-
-	// 监控 .env 文件，变更时重新加载
-	//viper.WatchConfig()
+	v.WatchConfig()
 }
 
 // Env 读取环境变量，支持默认值
@@ -75,11 +30,6 @@ func Env(envName string, defaultValue ...any) any {
 		return internalGet(envName, defaultValue[0])
 	}
 	return internalGet(envName)
-}
-
-// Add 新增配置项
-func Add(name string, configFn Func) {
-	FuncList[name] = configFn
 }
 
 // Get 获取配置项
@@ -91,13 +41,13 @@ func Get(path string, defaultValue ...any) string {
 
 func internalGet(path string, defaultValue ...any) any {
 	// conf 或者环境变量不存在的情况
-	if !viper.IsSet(path) || viper.Get(path) == nil {
+	if !v.IsSet(path) || v.Get(path) == nil {
 		if len(defaultValue) > 0 {
 			return defaultValue[0]
 		}
 		return nil
 	}
-	return viper.Get(path)
+	return v.Get(path)
 }
 
 // GetString 获取 String 类型的配置信息

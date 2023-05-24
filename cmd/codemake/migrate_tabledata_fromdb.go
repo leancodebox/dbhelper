@@ -38,8 +38,8 @@ func runMTableDataFromDb(_ *cobra.Command, _ []string) {
 			Colorful:                  false,        // 禁用彩色打印
 		},
 	)
-	dataSourceName := config.GetString("ORIGIN_DATABASE_URL")
-	localSourceName := config.GetString("TARGET_DATABASE_URL")
+	dataSourceName := config.GetString("dbTool.originUrl")
+	localSourceName := config.GetString("dbTool.targetUrl")
 	localDb, err := gorm.Open(mysql.Open(localSourceName), &gorm.Config{PrepareStmt: false,
 		NamingStrategy: schema.NamingStrategy{SingularTable: true}, // 全局禁用表名复数
 		Logger:         newLogger})
