@@ -106,7 +106,7 @@ CREATE TABLE `users`
 ```shell
 $ dbhelper init
 
-# 配置文件初始化完成，你可以查看当前目录下 .env 文件
+# 配置文件初始化完成，你可以查看当前目录下 config.toml 文件
 ```
 
 ### 修改配置文件

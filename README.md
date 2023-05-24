@@ -44,11 +44,11 @@ cd tmp
 dbhelper init
 ```
 
-`dbhelper init` 执行完毕后会在当前目录生成一个`.env` 文件，如果存在则不会再次生成。
+`dbhelper init` 执行完毕后会在当前目录生成一个`config.toml` 文件，如果存在则不会再次生成。
 
 ## 使用 dbhelper 进行数据库表迁移 命令：`dbhelper migrate:table`
 
-`.env` 中有两个变量和表结构迁移相关，分别是 `ORIGIN_DATABASE_URL` 原数据库 `TARGET_DATABASE_URL` 目标数据库。
+`config.toml` 中有两个变量和表结构迁移相关，分别是 `originUrl` 原数据库 `targetUrl` 目标数据库。
 变量配置格式如下
 
 ```
