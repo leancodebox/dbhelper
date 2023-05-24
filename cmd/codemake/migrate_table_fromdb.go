@@ -8,7 +8,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/leancodebox/dbhelper/util/config"
 	"github.com/leancodebox/dbhelper/util/eh"
 	"github.com/spf13/cobra"
 	"gorm.io/driver/mysql"
@@ -29,8 +28,14 @@ func init() {
 
 func runMTableFromDb(_ *cobra.Command, _ []string) {
 	// init
-	dataSourceName := config.GetString("dbTool.originUrl")
-	localSourceName := config.GetString("dbTool.targetUrl")
+	//dataSourceName := config.GetString("dbTool.originUrl")
+	//localSourceName := config.GetString("dbTool.targetUrl")
+	runConfig(func(targetUrl, originUrl, dbConnect, output string) {
+		MTableFromDb(originUrl, targetUrl)
+	})
+}
+
+func MTableFromDb(dataSourceName, localSourceName string) {
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer（日志输出的目标，前缀和日志包含的内容——译者注）
 		logger.Config{
@@ -91,7 +96,6 @@ func runMTableFromDb(_ *cobra.Command, _ []string) {
 	}
 
 	fmt.Println("迁移完毕")
-
 }
 
 type ShowTable struct {

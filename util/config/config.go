@@ -51,6 +51,10 @@ func internalGet(path string, defaultValue ...any) any {
 	return v.Get(path)
 }
 
+func GetAny(path string) any {
+	return v.Get(path)
+}
+
 // GetString 获取 String 类型的配置信息
 func GetString(path string, defaultValue ...any) string {
 	return cast.ToString(internalGet(path, defaultValue...))

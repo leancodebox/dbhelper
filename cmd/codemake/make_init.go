@@ -5,6 +5,8 @@ import (
 	"bytes"
 	"embed"
 	"fmt"
+	"github.com/leancodebox/dbhelper/util/config"
+	"github.com/spf13/cast"
 	"os"
 	"path/filepath"
 	"text/template"
@@ -70,4 +72,27 @@ func buildByTmpl(data map[string]any, tmplPath string) string {
 		fmt.Println(err)
 	}
 	return b.String()
+}
+
+func runConfig(action func(targetUrl, originUrl, dbConnect, output string)) {
+	oConfig := config.GetAny("db")
+	if oConfig == nil {
+		fmt.Println("当前尚未有配置")
+		return
+	}
+	if configList, ok := oConfig.([]any); ok {
+		for index, itemConfig := range configList {
+			if itemConfigMap, ok := itemConfig.(map[string]any); ok {
+				targetUrl := cast.ToString(itemConfigMap["target_url"])
+				originUrl := cast.ToString(itemConfigMap["origin_url"])
+				dbConnect := cast.ToString(itemConfigMap["connect"])
+				output := cast.ToString(itemConfigMap["output"])
+				action(targetUrl, originUrl, dbConnect, output)
+			} else {
+				fmt.Println("db 配置有误，分组：", index)
+			}
+		}
+	} else {
+		fmt.Println("配置有误请检查")
+	}
 }

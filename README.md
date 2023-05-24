@@ -48,7 +48,7 @@ dbhelper init
 
 ## 使用 dbhelper 进行数据库表迁移 命令：`dbhelper migrate:table`
 
-`config.toml` 中有两个变量和表结构迁移相关，分别是 `originUrl` 原数据库 `targetUrl` 目标数据库。
+`config.toml` 中有两个变量和表结构迁移相关，分别是 `origin_url` 原数据库 `target_url` 目标数据库。
 变量配置格式如下
 
 ```

@@ -3,7 +3,6 @@ package codemake
 import (
 	"fmt"
 	"github.com/leancodebox/dbhelper/util/app"
-	"github.com/leancodebox/dbhelper/util/config"
 	"github.com/leancodebox/dbhelper/util/eh"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
@@ -29,6 +28,15 @@ func init() {
 
 func runMTableDataFromDb(_ *cobra.Command, _ []string) {
 	// init
+	//dataSourceName := config.GetString("dbTool.originUrl")
+	//localSourceName := config.GetString("dbTool.targetUrl")
+	//MTableDataFromDb(dataSourceName, localSourceName)
+	runConfig(func(targetUrl, originUrl, dbConnect, output string) {
+		MTableDataFromDb(originUrl, targetUrl)
+	})
+}
+
+func MTableDataFromDb(dataSourceName, localSourceName string) {
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer（日志输出的目标，前缀和日志包含的内容——译者注）
 		logger.Config{
@@ -38,8 +46,6 @@ func runMTableDataFromDb(_ *cobra.Command, _ []string) {
 			Colorful:                  false,        // 禁用彩色打印
 		},
 	)
-	dataSourceName := config.GetString("dbTool.originUrl")
-	localSourceName := config.GetString("dbTool.targetUrl")
 	localDb, err := gorm.Open(mysql.Open(localSourceName), &gorm.Config{PrepareStmt: false,
 		NamingStrategy: schema.NamingStrategy{SingularTable: true}, // 全局禁用表名复数
 		Logger:         newLogger})
@@ -110,5 +116,4 @@ func runMTableDataFromDb(_ *cobra.Command, _ []string) {
 	}
 	fmt.Println("迁移完毕")
 	fmt.Println(app.GetUnitTime())
-
 }

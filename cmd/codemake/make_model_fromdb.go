@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/leancodebox/dbhelper/util"
-	"github.com/leancodebox/dbhelper/util/config"
 	"github.com/leancodebox/dbhelper/util/eh"
 	"github.com/leancodebox/dbhelper/util/str"
 
@@ -51,8 +50,17 @@ type genColumns struct {
 func runGModel(_ *cobra.Command, _ []string) {
 
 	// init
-	dataSourceName := config.GetString("dbTool.originUrl")
-	outputRoot := config.GetString("dbTool.output", "./storage/tmp/model/")
+	//dataSourceName := config.GetString("dbTool.originUrl")
+	//dbStd := fmt.Sprintf(`"%v"`, config.GetString("dbTool.dbConnect", `thh/conf/dbconnect`))
+	//outputRoot := config.GetString("dbTool.output", "./storage/tmp/model/")
+
+	runConfig(func(targetUrl, originUrl, dbConnect, output string) {
+		makeModel(originUrl, dbConnect, output)
+	})
+
+}
+
+func makeModel(dataSourceName, dbStd, outputRoot string) {
 
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer（日志输出的目标，前缀和日志包含的内容——译者注）
@@ -89,7 +97,7 @@ func runGModel(_ *cobra.Command, _ []string) {
 		// Get table annotations.获取表注释
 		db.Raw("show FULL COLUMNS from " + tmpTableName).Scan(&list)
 
-		modelStr, connectStr, repStr := buildModelContent(tmpTableName, list)
+		modelStr, connectStr, repStr := buildModelContent(tmpTableName, list, dbStd)
 		modelPath := str.Camel(tmpTableName)
 
 		modelEntityPath := outputRoot + modelPath + "/" + modelPath + ".go"
@@ -110,7 +118,6 @@ func runGModel(_ *cobra.Command, _ []string) {
 		fmt.Println("fmt success", string(o))
 	}
 	fmt.Println("build end")
-
 }
 
 type Field struct {
@@ -129,8 +136,7 @@ type Field struct {
 	Field           string
 }
 
-func buildModelContent(tmpTableName string, list []genColumns) (string, string, string) {
-	dbStd := fmt.Sprintf(`"%v"`, config.GetString("DB_CONNECT", `thh/conf/dbconnect`))
+func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (string, string, string) {
 
 	importList := map[string]string{}
 	var fieldList []Field
