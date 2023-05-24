@@ -19,7 +19,8 @@ func init() {
 	// 将命令行标志的值设置为 Viper 配置实例的属性
 	v.SetConfigFile(*configFlag)
 	if err := v.ReadInConfig(); err != nil {
-		fmt.Println("ReadInConfig err", err)
+		fmt.Println("获取配置失败:", err)
+		fmt.Println("如果当前处在init命令之中请忽略本次报错")
 	}
 	v.WatchConfig()
 }
