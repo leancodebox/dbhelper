@@ -114,11 +114,17 @@ $ dbhelper init
 ```shell
 $ vim .env
 
+[[db]]
 # 你的数据库配置
-ORIGIN_DATABASE_URL=root:123456@tcp(:3306)/test?charset=utf8mb4&parseTime=True&loc=Local
-DB_CONNECT=go-sample/dbconnect
+# 目标数据库
+target_url = "root:root_password@tcp(127.0.0.1:3306)/thh_database?charset=utf8mb4&parseTime=True&loc=Local"
+# 源数据库
+origin_url = "root:root_password@tcp(127.0.0.1:3306)/thh_database?charset=utf8mb4&parseTime=True&loc=Local"
+# 源数据库
 # 生成代码目录（按需改成你需要的目录，或者把这个目录写到你项目需要生成的目录也可以）
-MODEL_OUTPUT_DIR=./model/
+connect = "dt/config/dbconnect"
+output = "./storage/model/"
+
 ```
 
 ### 生成 gorm 文件
