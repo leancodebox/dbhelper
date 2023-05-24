@@ -92,6 +92,7 @@ func makeModel(dataSourceName, dbStd, outputRoot string) {
 	eh.PrIF(rows.Close())
 
 	for tmpTableName, _ := range tbDesc {
+		fmt.Println("start gen ", tmpTableName)
 		var list []genColumns
 
 		// Get table annotations.获取表注释
@@ -113,7 +114,7 @@ func makeModel(dataSourceName, dbStd, outputRoot string) {
 	}
 	o, e := exec.Command("gofmt", "-w", outputRoot).Output()
 	if e != nil {
-		fmt.Println(e)
+		fmt.Println("fmt error", e)
 	} else {
 		fmt.Println("fmt success", string(o))
 	}
@@ -198,7 +199,8 @@ func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (st
 	modelStr := buildByTmpl(
 		map[string]any{
 			"TableName":  tmpTableName,
-			"ModelName":  str.Camel(tmpTableName),
+			"pkgName":    str.Camel(tmpTableName),
+			"ModelName":  "Entity", //str.Camel(tmpTableName),
 			"importList": importList,
 			"fieldList":  fieldList,
 		},
@@ -207,17 +209,19 @@ func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (st
 	connectStr := buildByTmpl(
 		map[string]any{
 			"TableName":  tmpTableName,
-			"ModelName":  str.Camel(tmpTableName),
+			"pkgName":    str.Camel(tmpTableName),
+			"ModelName":  "Entity", //str.Camel(tmpTableName),
 			"importList": importList,
 			"fieldList":  fieldList,
-			"DBPkg":      dbStd,
+			"DBPkg":      "\"" + dbStd + "\"",
 		},
 		"tmpl/db/connect.tmpl",
 	)
 	repStr := buildByTmpl(
 		map[string]any{
 			"TableName":  tmpTableName,
-			"ModelName":  str.Camel(tmpTableName),
+			"pkgName":    str.Camel(tmpTableName),
+			"ModelName":  "Entity", //str.Camel(tmpTableName),
 			"importList": importList,
 			"fieldList":  fieldList,
 		},

@@ -1,4 +1,4 @@
-package {{.ModelName}}
+package {{.pkgName}}
 
 import (
 	"gorm.io/gorm"
@@ -20,5 +20,37 @@ func first(db *gorm.DB) (el *{{.ModelName}}) {
 
 func getList(db *gorm.DB) (el []*{{.ModelName}}) {
 	db.Find(&el)
+	return
+}
+
+func create(entity *{{.ModelName}}) int64 {
+	result := builder().Create(entity)
+	return result.RowsAffected
+}
+
+func save(entity *{{.ModelName}}) int64 {
+	result := builder().Save(entity)
+	return result.RowsAffected
+}
+
+func saveAll(entities []*{{.ModelName}}) int64 {
+	result := builder().Save(entities)
+	return result.RowsAffected
+}
+
+func deleteEntity(entity *{{.ModelName}}) int64 {
+	result := builder().Delete(entity)
+	return result.RowsAffected
+}
+
+{{ if .hasPid}}
+func Get(id any) (entity {{.ModelName}}) {
+	builder().Where(pid, id).First(&entity)
+	return
+}
+
+{{ end}}
+func all() (entities []*{{.ModelName}}) {
+	builder().Find(&entities)
 	return
 }
