@@ -99,7 +99,7 @@ func makeModel(dataSourceName, dbStd, outputRoot string) {
 		db.Raw("show FULL COLUMNS from " + tmpTableName).Scan(&list)
 
 		modelStr, connectStr, repStr := buildModelContent(tmpTableName, list, dbStd)
-		modelPath := str.Camel(tmpTableName)
+		modelPath := str.LowerCamel(tmpTableName)
 
 		modelEntityPath := outputRoot + modelPath + "/" + modelPath + ".go"
 		connectPath := outputRoot + modelPath + "/" + modelPath + "_connect.go"
@@ -199,7 +199,7 @@ func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (st
 	modelStr := buildByTmpl(
 		map[string]any{
 			"TableName":  tmpTableName,
-			"pkgName":    str.Camel(tmpTableName),
+			"pkgName":    str.LowerCamel(tmpTableName),
 			"ModelName":  "Entity", //str.Camel(tmpTableName),
 			"importList": importList,
 			"fieldList":  fieldList,
@@ -209,7 +209,7 @@ func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (st
 	connectStr := buildByTmpl(
 		map[string]any{
 			"TableName":  tmpTableName,
-			"pkgName":    str.Camel(tmpTableName),
+			"pkgName":    str.LowerCamel(tmpTableName),
 			"ModelName":  "Entity", //str.Camel(tmpTableName),
 			"importList": importList,
 			"fieldList":  fieldList,
@@ -220,7 +220,7 @@ func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (st
 	repStr := buildByTmpl(
 		map[string]any{
 			"TableName":  tmpTableName,
-			"pkgName":    str.Camel(tmpTableName),
+			"pkgName":    str.LowerCamel(tmpTableName),
 			"ModelName":  "Entity", //str.Camel(tmpTableName),
 			"importList": importList,
 			"fieldList":  fieldList,
