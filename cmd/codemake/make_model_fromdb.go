@@ -39,12 +39,12 @@ type modelEm struct {
 	Type  string // 字段类型
 }
 type genColumns struct {
-	Field   string  `gorm:"column:Field"`
-	Type    string  `gorm:"column:Type"`
-	Key     string  `gorm:"column:Key"`
-	Desc    string  `gorm:"column:Comment"`
-	Null    string  `gorm:"column:Null"`
-	Default *string `gorm:"column:Default"`
+	Field   string  `gorm:"column:Field" json:"field"`
+	Type    string  `gorm:"column:Type" json:"type"`
+	Key     string  `gorm:"column:Key" json:"key"`
+	Desc    string  `gorm:"column:Comment" json:"desc"`
+	Null    string  `gorm:"column:Null" json:"null"`
+	Default *string `gorm:"column:Default" json:"default"`
 }
 
 func runGModel(_ *cobra.Command, _ []string) {

@@ -1,0 +1,55 @@
+[
+  {
+    "modelName": "modelName",
+    "keyList": [
+      {
+        "field": "id",
+        "type": "bigint unsigned",
+        "key": "PRI",
+        "desc": "主键",
+        "null": "NO",
+        "default": null
+      },
+      {
+        "field": "chat_id",
+        "type": "varchar(255)",
+        "key": "",
+        "desc": "",
+        "null": "NO",
+        "default": "0"
+      },
+      {
+        "field": "message_id",
+        "type": "varchar(255)",
+        "key": "",
+        "desc": "",
+        "null": "NO",
+        "default": "0"
+      },
+      {
+        "field": "status",
+        "type": "int",
+        "key": "",
+        "desc": "0 发送完毕 , 1 撤回成功",
+        "null": "NO",
+        "default": "0"
+      },
+      {
+        "field": "create_time",
+        "type": "datetime",
+        "key": "",
+        "desc": "",
+        "null": "NO",
+        "default": "CURRENT_TIMESTAMP"
+      },
+      {
+        "field": "update_time",
+        "type": "datetime",
+        "key": "",
+        "desc": "",
+        "null": "NO",
+        "default": "CURRENT_TIMESTAMP"
+      }
+    ]
+  }
+]
