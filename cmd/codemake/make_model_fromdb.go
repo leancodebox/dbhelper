@@ -99,7 +99,7 @@ func makeModel(dataSourceName, dbStd, outputRoot string) {
 		db.Raw("show FULL COLUMNS from " + tmpTableName).Scan(&list)
 
 		modelStr, connectStr, repStr := buildModelContent(tmpTableName, list, dbStd)
-		modelPath := str.LowerCamel(tmpTableName)
+		modelPath := str.LowerCamel(str.Camel(tmpTableName))
 
 		modelEntityPath := outputRoot + modelPath + "/" + modelPath + ".go"
 		connectPath := outputRoot + modelPath + "/" + modelPath + "_connect.go"
@@ -140,6 +140,8 @@ type Field struct {
 func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (string, string, string) {
 
 	importList := map[string]string{}
+	var hasPid = false
+	var pidFiledName = ""
 	var fieldList []Field
 
 	for _, value := range list {
@@ -173,6 +175,8 @@ func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (st
 		if value.Key == "PRI" {
 			typeString = `autoIncrement`
 			fieldName = `pid`
+			hasPid = true
+			pidFiledName = field
 		}
 		typeString += ";"
 
@@ -219,11 +223,13 @@ func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (st
 	)
 	repStr := buildByTmpl(
 		map[string]any{
-			"TableName":  tmpTableName,
-			"pkgName":    str.LowerCamel(tmpTableName),
-			"ModelName":  "Entity", //str.Camel(tmpTableName),
-			"importList": importList,
-			"fieldList":  fieldList,
+			"TableName":    tmpTableName,
+			"pkgName":      str.LowerCamel(tmpTableName),
+			"ModelName":    "Entity", //str.Camel(tmpTableName),
+			"importList":   importList,
+			"fieldList":    fieldList,
+			"hasPid":       hasPid,
+			"pidFiledName": pidFiledName,
 		},
 		"tmpl/db/rep.tmpl",
 	)

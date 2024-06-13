@@ -1,14 +1,34 @@
 package {{.pkgName}}
 
-//func create(entity *{{.ModelName}}) int64 {
-//	result := builder().Create(entity)
-//	return result.RowsAffected
-//}
+func create(entity *{{.ModelName}}) int64 {
+	result := builder().Create(entity)
+	return result.RowsAffected
+}
 
-//func save(entity *{{.ModelName}}) int64 {
-//	result := builder().Save(entity)
-//	return result.RowsAffected
-//}
+func save(entity *{{.ModelName}}) int64 {
+	result := builder().Save(entity)
+	return result.RowsAffected
+}
+
+{{ if .hasPid}}
+
+func SaveOrCreateById(entity *{{.ModelName}}) int64 {
+	if entity.{{.pidFiledName}} == 0 {
+		return create(entity)
+	} else {
+		return save(entity)
+	}
+}
+{{ end}}
+
+{{ if .hasPid}}
+
+func Get(id any) (entity {{.ModelName}}) {
+	builder().First(&entity, id)
+	return
+}
+
+{{ end}}
 
 //func saveAll(entities []*{{.ModelName}}) int64 {
 //	result := builder().Save(entities)
@@ -20,13 +40,7 @@ package {{.pkgName}}
 //	return result.RowsAffected
 //}
 
-{{ if .hasPid}}
-//func Get(id any) (entity {{.ModelName}}) {
-//	builder().First(&entity, id)
-//	return
-//}
 
-{{ end}}
 //func all() (entities []*{{.ModelName}}) {
 //	builder().Find(&entities)
 //	return
