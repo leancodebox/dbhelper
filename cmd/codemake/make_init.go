@@ -75,7 +75,7 @@ func buildByTmpl(data map[string]any, tmplPath string) string {
 }
 
 func runConfig(action func(targetUrl, originUrl, dbConnect, output string)) {
-	oConfig := config.GetAny("db")
+	oConfig := config.GetAny("dbhelper")
 	if oConfig == nil {
 		fmt.Println("当前尚未有配置")
 		return

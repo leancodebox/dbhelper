@@ -2,7 +2,7 @@
 output = "./storage/model/"
 connect = "dt/config/dbconnect"
 
-[[db]]
+[[dbhelper]]
 # 目标数据库
 target_url = "root:root_password@tcp(127.0.0.1:3306)/thh_database?charset=utf8mb4&parseTime=True&loc=Local"
 # 源数据库
@@ -12,7 +12,7 @@ connect = "dt/config/dbconnect"
 output = "./storage/model/"
 
 # 可以配置多个
-#[[db]]
+#[[dbhelper]]
 ## 目标数据库
 #target_url = "root:root_password@tcp(127.0.0.1:3306)/thh_database?charset=utf8mb4&parseTime=True&loc=Local"
 ## 源数据库
@@ -20,7 +20,7 @@ output = "./storage/model/"
 ## 源数据库
 #connect = "dt/config/dbconnect"
 #output = "./storage/model/"
-#[[db]]
+#[[dbhelper]]
 ## 目标数据库
 #target_url = "root:root_password@tcp(127.0.0.1:3306)/thh_database?charset=utf8mb4&parseTime=True&loc=Local"
 ## 源数据库

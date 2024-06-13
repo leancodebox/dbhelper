@@ -114,7 +114,7 @@ $ dbhelper init
 ```shell
 $ vim .env
 
-[[db]]
+[[dbhelper]]
 # 你的数据库配置
 # 目标数据库
 target_url = "root:root_password@tcp(127.0.0.1:3306)/thh_database?charset=utf8mb4&parseTime=True&loc=Local"
