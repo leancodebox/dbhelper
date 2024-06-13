@@ -1,5 +1,5 @@
 // Package str 字符串辅助方法
-package str
+package stropt
 
 import (
 	"github.com/gertd/go-pluralize"

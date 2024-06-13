@@ -12,7 +12,7 @@ import (
 	"text/template"
 
 	"github.com/leancodebox/dbhelper/util"
-	"github.com/leancodebox/dbhelper/util/str"
+	"github.com/leancodebox/dbhelper/util/stropt"
 
 	"github.com/iancoleman/strcase"
 )
@@ -29,9 +29,9 @@ var tmplFS embed.FS
 // makeModelFromString 格式化用户输入的内容
 func makeModelFromString(name string) Model {
 	model := Model{}
-	model.StructName = str.Singular(strcase.ToCamel(name))
-	model.PackageName = str.Snake(model.StructName)
-	model.ClientName = str.Camel(model.StructName)
+	model.StructName = stropt.Singular(strcase.ToCamel(name))
+	model.PackageName = stropt.Snake(model.StructName)
+	model.ClientName = stropt.Camel(model.StructName)
 	return model
 }
 

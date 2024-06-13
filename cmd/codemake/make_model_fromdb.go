@@ -13,7 +13,7 @@ import (
 
 	"github.com/leancodebox/dbhelper/util"
 	"github.com/leancodebox/dbhelper/util/eh"
-	"github.com/leancodebox/dbhelper/util/str"
+	"github.com/leancodebox/dbhelper/util/stropt"
 
 	"github.com/spf13/cobra"
 	"gorm.io/driver/mysql"
@@ -99,7 +99,7 @@ func makeModel(dataSourceName, dbStd, outputRoot string) {
 		db.Raw("show FULL COLUMNS from " + tmpTableName).Scan(&list)
 
 		modelStr, connectStr, repStr := buildModelContent(tmpTableName, list, dbStd)
-		modelPath := str.LowerCamel(str.Camel(tmpTableName))
+		modelPath := stropt.LowerCamel(stropt.Camel(tmpTableName))
 
 		modelEntityPath := outputRoot + modelPath + "/" + modelPath + ".go"
 		connectPath := outputRoot + modelPath + "/" + modelPath + "_connect.go"
@@ -147,9 +147,9 @@ func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (st
 	for _, value := range list {
 		var field string
 		if IsNum(string(value.Field[0])) {
-			field = "Column" + str.Camel(value.Field)
+			field = "Column" + stropt.Camel(value.Field)
 		} else {
-			field = str.Camel(value.Field)
+			field = stropt.Camel(value.Field)
 		}
 		if pkgName, ok := EImportsHead[getTypeName(value.Type, false)]; ok {
 			importList[pkgName] = pkgName
@@ -170,7 +170,7 @@ func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (st
 			defaultStr += ";"
 		}
 
-		fieldName := "field" + str.Camel(str.LowerCamel(value.Field))
+		fieldName := "field" + stropt.Camel(stropt.LowerCamel(value.Field))
 		typeString := `type:` + value.Type
 		if value.Key == "PRI" {
 			typeString = `autoIncrement`
@@ -186,7 +186,7 @@ func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (st
 			Field:           value.Field,
 			FieldName:       fieldName,
 			StructFieldName: field,
-			JsonName:        str.LowerCamel(value.Field),
+			JsonName:        stropt.LowerCamel(value.Field),
 			Index:           value.Key,
 			Type:            getTypeName(value.Type, value.Null != "NO"),
 			Pid:             value.Key == "PRI",
@@ -203,7 +203,7 @@ func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (st
 	modelStr := buildByTmpl(
 		map[string]any{
 			"TableName":  tmpTableName,
-			"pkgName":    str.LowerCamel(tmpTableName),
+			"pkgName":    stropt.LowerCamel(tmpTableName),
 			"ModelName":  "Entity", //str.Camel(tmpTableName),
 			"importList": importList,
 			"fieldList":  fieldList,
@@ -213,7 +213,7 @@ func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (st
 	connectStr := buildByTmpl(
 		map[string]any{
 			"TableName":  tmpTableName,
-			"pkgName":    str.LowerCamel(tmpTableName),
+			"pkgName":    stropt.LowerCamel(tmpTableName),
 			"ModelName":  "Entity", //str.Camel(tmpTableName),
 			"importList": importList,
 			"fieldList":  fieldList,
@@ -224,7 +224,7 @@ func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (st
 	repStr := buildByTmpl(
 		map[string]any{
 			"TableName":    tmpTableName,
-			"pkgName":      str.LowerCamel(tmpTableName),
+			"pkgName":      stropt.LowerCamel(tmpTableName),
 			"ModelName":    "Entity", //str.Camel(tmpTableName),
 			"importList":   importList,
 			"fieldList":    fieldList,
