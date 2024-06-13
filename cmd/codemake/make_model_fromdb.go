@@ -217,7 +217,7 @@ func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (st
 			"ModelName":  "Entity", //str.Camel(tmpTableName),
 			"importList": importList,
 			"fieldList":  fieldList,
-			"DBPkg":      "\"" + dbStd + "\"",
+			"DBPkg":      dbStd,
 		},
 		"tmpl/db/connect.tmpl",
 	)
