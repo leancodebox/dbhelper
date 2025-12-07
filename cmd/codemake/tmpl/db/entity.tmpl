@@ -1,18 +1,25 @@
 package {{.pkgName}}
 
-{{ if .importList}}
-import ({{ range $index,$value := .importList}}
-    {{$value}}{{end }}
+{{ if .importItemList}}
+import ({{ range $index,$value := .importItemList}}
+    {{if $value.Alias}}{{$value.Alias}} {{end}}{{$value.PkgName}}{{end }}
 )
 {{ end}}
+
+func builder() *gorm.DB {
+	return db.Connect().Table(tableName)
+}
 
 const tableName = "{{.TableName}}"{{range $index,$value := .fieldList}}
 // {{$value.FieldName}} {{$value.Comment}}
 const {{$value.FieldName}} = "{{$value.Field}}"{{end}}
 
-type {{.ModelName}} struct {
-{{range $index,$value := .fieldList}}
+type {{.ModelName}} struct { {{range $index,$value := .fieldList}}
     {{$value.StructFieldName}} {{$value.Type}} `gorm:"{{if $value.Pid}}primaryKey;{{end}}column:{{$value.DBFieldName}};{{$value.TypeTag}}{{$value.NullTag}}{{$value.DefaultTag}}" json:"{{$value.JsonName}}"`// {{$value.Comment}}  {{end}}
+}
+
+func (itself *{{.ModelName}}) TableName() string {
+	return tableName
 }
 
 // func (itself *{{.ModelName}}) BeforeSave(tx *gorm.DB) (err error) {}
@@ -24,7 +31,3 @@ type {{.ModelName}} struct {
 // func (itself *{{.ModelName}}) BeforeDelete(tx *gorm.DB) (err error) {}
 // func (itself *{{.ModelName}}) AfterDelete(tx *gorm.DB) (err error) {}
 // func (itself *{{.ModelName}}) AfterFind(tx *gorm.DB) (err error) {}
-
-func (itself *{{.ModelName}}) TableName() string {
-	return tableName
-}

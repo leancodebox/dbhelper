@@ -98,15 +98,13 @@ func makeModel(dataSourceName, dbStd, outputRoot string) {
 		// Get table annotations.获取表注释
 		db.Raw("show FULL COLUMNS from " + tmpTableName).Scan(&list)
 
-		modelStr, connectStr, repStr := buildModelContent(tmpTableName, list, dbStd)
+		modelStr, repStr := buildModelContent(tmpTableName, list, dbStd)
 		modelPath := stropt.LowerCamel(stropt.Camel(tmpTableName))
 
 		modelEntityPath := outputRoot + modelPath + "/" + modelPath + ".go"
-		connectPath := outputRoot + modelPath + "/" + modelPath + "_connect.go"
 		repPath := outputRoot + modelPath + "/" + modelPath + "_rep.go"
 
 		util.PutContent(modelEntityPath, modelStr)
-		util.PutContent(connectPath, connectStr)
 
 		if !util.IsExist(repPath) {
 			util.PutContent(repPath, repStr)
@@ -136,10 +134,21 @@ type Field struct {
 	Comment         string
 	Field           string
 }
+type ImportItem struct {
+	PkgName string
+	Alias   string
+}
 
-func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (string, string, string) {
-
+func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (string, string) {
 	importList := map[string]string{}
+	importItemList := []ImportItem{{
+		PkgName: fmt.Sprintf(`"%v"`, dbStd),
+		Alias:   "db",
+	}, {
+		PkgName: `"gorm.io/gorm"`,
+		Alias:   "",
+	},
+	}
 	var hasPid = false
 	var pidFiledName = ""
 	var fieldList []Field
@@ -152,7 +161,10 @@ func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (st
 			field = stropt.Camel(value.Field)
 		}
 		if pkgName, ok := EImportsHead[getTypeName(value.Type, false)]; ok {
-			importList[pkgName] = pkgName
+			if _, has := importList[pkgName]; !has {
+				importList[pkgName] = pkgName
+				importItemList = append(importItemList, ImportItem{pkgName, ""})
+			}
 		}
 		nullTag := ""
 		if value.Null == "NO" {
@@ -202,24 +214,15 @@ func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (st
 	}
 	modelStr := buildByTmpl(
 		map[string]any{
-			"TableName":  tmpTableName,
-			"pkgName":    stropt.LowerCamel(tmpTableName),
-			"ModelName":  "Entity", //str.Camel(tmpTableName),
-			"importList": importList,
-			"fieldList":  fieldList,
+			"TableName":      tmpTableName,
+			"pkgName":        stropt.LowerCamel(tmpTableName),
+			"ModelName":      "Entity", //str.Camel(tmpTableName),
+			"importList":     importList,
+			"importItemList": importItemList,
+			"fieldList":      fieldList,
+			"DBPkg":          dbStd,
 		},
 		"tmpl/db/entity.tmpl",
-	)
-	connectStr := buildByTmpl(
-		map[string]any{
-			"TableName":  tmpTableName,
-			"pkgName":    stropt.LowerCamel(tmpTableName),
-			"ModelName":  "Entity", //str.Camel(tmpTableName),
-			"importList": importList,
-			"fieldList":  fieldList,
-			"DBPkg":      dbStd,
-		},
-		"tmpl/db/connect.tmpl",
 	)
 	repStr := buildByTmpl(
 		map[string]any{
@@ -233,7 +236,7 @@ func buildModelContent(tmpTableName string, list []genColumns, dbStd string) (st
 		},
 		"tmpl/db/rep.tmpl",
 	)
-	return modelStr, connectStr, repStr
+	return modelStr, repStr
 }
 
 func getFileLine(path string) int {
@@ -302,7 +305,7 @@ func fixNullToPointer(name string, isNull bool) string {
 }
 
 var EImportsHead = map[string]string{
-	"stirng":         `"string"`,
+	"stirng":         `"string"`, //  没有这个包
 	"time.Time":      `"time"`,
 	"gorm.Model":     `"gorm.io/gorm"`,
 	"fmt":            `"fmt"`,

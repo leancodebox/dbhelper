@@ -2,6 +2,7 @@ package codemake
 
 import (
 	"fmt"
+
 	"github.com/leancodebox/dbhelper/util"
 	"github.com/leancodebox/dbhelper/util/config"
 	"github.com/leancodebox/dbhelper/util/jsonopt"
@@ -40,13 +41,12 @@ func outPutModel(modelName string, list []genColumns) {
 	connectPath := outputRoot + modelPath + "/" + modelPath + "_connect.go"
 	repPath := outputRoot + modelPath + "/" + modelPath + "_rep.go"
 
-	modelStr, connectStr, repStr := buildModelContent(stropt.Snake(modelName), list, connect)
+	modelStr, repStr := buildModelContent(stropt.Snake(modelName), list, connect)
 
-	fmt.Println(modelStr, connectStr, repStr)
+	fmt.Println(modelStr, repStr)
 	fmt.Println(modelEntityPath)
 	fmt.Println(connectPath)
 	fmt.Println(repPath)
 	util.FilePutContents(modelEntityPath, modelStr)
-	util.FilePutContents(connectPath, connectStr)
 	util.IsExistOrCreate(repPath, repStr)
 }

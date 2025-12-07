@@ -11,7 +11,6 @@ func save(entity *{{.ModelName}}) int64 {
 }
 
 {{ if .hasPid}}
-
 func SaveOrCreateById(entity *{{.ModelName}}) int64 {
 	if entity.{{.pidFiledName}} == 0 {
 		return create(entity)
